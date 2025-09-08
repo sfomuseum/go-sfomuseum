@@ -1,0 +1,17 @@
+{
+	"type":"Feature",
+	"properties":{
+		"edtf:inception": "",
+		"edtf:cessation": "",				 
+		"mz:is_current": -1,
+		"sfomuseum:placetype": "airline",
+		"sfomuseum:airline_id": -1,
+		"src:geom": "unknown",
+		"wof:country":"XY",	
+		"wof:name": "Untitled record",
+		"wof:parent_id": -1,
+		"wof:placetype": "custom",		
+		"wof:repo": "sfomuseum-data-enterprise"
+ 	},
+	"geometry": {"type":"Point", "coordinates": [0.0, 0.0]}
+}	    
