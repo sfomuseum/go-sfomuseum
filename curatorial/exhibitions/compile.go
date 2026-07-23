@@ -28,7 +28,7 @@ func CompileExhibitionsData(ctx context.Context, iterator_uri string, iterator_s
 		}
 
 		defer rec.Body.Close()
-		
+
 		select {
 		case <-ctx.Done():
 			break

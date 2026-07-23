@@ -30,6 +30,21 @@ compile:
 	@make compile-architecture
 	@make compile-curatorial
 	@make compile-maps
+	@make compile-geo
+
+compile-geo:
+	@make compile-geotag
+	@make compile-georef
+
+compile-geotag:
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-geotag-add cmd/sfom-geotag-add/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-geotag-remove cmd/sfom-geotag-remove/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-geotag-build-update cmd/sfom-geotag-build-update/main.go
+
+compile-georef:
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-georef-add cmd/sfom-georef-add/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-georef-remove cmd/sfom-georef-remove/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-georef-recompile-subject cmd/sfom-georef-recompile-subject/main.go
 
 compile-maps:
 	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-maps-catalog-js cmd/sfom-maps-catalog-js/main.go
@@ -87,3 +102,50 @@ compile-exhibitions-data:
 
 compile-collection-data:
 	go run -mod $(GOMOD) -ldflags="-s -w" cmd/compile-collection-data/main.go
+
+# subject (object):
+# https://collection.sfomuseum.org/objects/1897902471/
+# https://static.sfomuseum.org/data/189/790/247/1/1897902471.geojson
+#
+# depiction (image):
+# https://collection.sfomuseum.org/images/1897903961/
+# https://github.com/sfomuseum-data/sfomuseum-data-media-collection/blob/main/data/189/790/396/1/1897903961.geojson
+#
+# reference (bangkok):
+# https://spelunker.whosonfirst.org/id/102025263
+
+debug-georef-photo:
+	go run -mod $(GOMOD) cmd/assign-georeferences/main.go \
+		-depiction-reader-uri repo://$(CWD)/fixtures/sfomuseum-data-media-collection \
+		-depiction-writer-uri stdout:// \
+		-subject-reader-uri repo://$(CWD)/fixtures/sfomuseum-data-collection \
+		-subject-writer-uri stdout:// \
+		-depiction-id 1897903961 \
+		-reference sfomuseum:depicts=102025263
+
+
+# subject (object):
+# https://collection.sfomuseum.org/objects/1511907389
+# https://static.sfomuseum.org/data/151/190/738/9/1511907389.geojson
+#
+# depiction (image):
+# https://collection.sfomuseum.org/images/1527829811/
+# https://static.sfomuseum.org/data/152/782/981/1/1527829811.geojson
+#
+# reference (noumea)
+# https://spelunker.whosonfirst.org/id/890413117
+# reference (sydney)
+# https://spelunker.whosonfirst.org/id/101932003
+
+debug-georef-flightcover:
+	mkdir -p $(CWD)/fixtures/debug/data
+	rm -rf $(CWD)/fixtures/debug/data/*
+	go run -mod $(GOMOD) cmd/assign-georeferences/main.go \
+		-depiction-reader-uri repo://$(CWD)/fixtures/sfomuseum-data-media-collection \
+		-depiction-writer-uri repo://$(CWD)/fixtures/debug \
+		-subject-reader-uri repo://$(CWD)/fixtures/sfomuseum-data-collection \
+		-subject-writer-uri repo://$(CWD)/fixtures/debug \
+		-depiction-id 1527829811 \
+		-reference sfomuseum:flightcover_to=890413117 \
+		-reference sfomuseum:flightcover_from=101932003 \
+		-verbose

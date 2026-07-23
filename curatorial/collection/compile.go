@@ -20,7 +20,7 @@ func CompileCollectionData(ctx context.Context, iterator_uri string, iterator_so
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create iterator, %w", err)
 	}
-	
+
 	for rec, err := range iter.Iterate(ctx, iterator_sources...) {
 
 		if err != nil {

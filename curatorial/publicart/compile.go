@@ -15,7 +15,6 @@ func CompilePublicArtWorksData(ctx context.Context, iterator_uri string, iterato
 
 	lookup := make([]*PublicArtWork, 0)
 
-
 	iter, err := iterate.NewIterator(ctx, iterator_uri)
 
 	if err != nil {
@@ -29,7 +28,7 @@ func CompilePublicArtWorksData(ctx context.Context, iterator_uri string, iterato
 		}
 
 		defer rec.Body.Close()
-		
+
 		select {
 		case <-ctx.Done():
 			break

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/sfomuseum/go-sfomuseum/curatorial"	
+	"github.com/sfomuseum/go-sfomuseum/curatorial"
 )
 
 func TestExhibitionsLookup(t *testing.T) {
