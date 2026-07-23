@@ -7,9 +7,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/whosonfirst/go-whosonfirst-feature/properties"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v3"
-	"github.com/whosonfirst/go-whosonfirst-uri"
+	"github.com/whosonfirst/go-whosonfirst/v4/feature/properties"
+	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
+	"github.com/whosonfirst/go-whosonfirst/v4/uri"
 )
 
 // CompileGatesData will generate a list of `Gate` struct to be used as the source data for an `SFOMuseumLookup` instance.

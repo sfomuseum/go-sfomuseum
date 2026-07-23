@@ -11,13 +11,13 @@ import (
 	"log"
 
 	"github.com/sfomuseum/go-flags/flagset"
-	sfom_writer "github.com/sfomuseum/go-sfomuseum-writer/v3"
+	sfom_writer "github.com/sfomuseum/go-sfomuseum/writer"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader/v2"
-	"github.com/whosonfirst/go-whosonfirst-export/v3"
-	"github.com/whosonfirst/go-whosonfirst-feature/properties"
-	wof_reader "github.com/whosonfirst/go-whosonfirst-reader/v2"
-	"github.com/whosonfirst/go-whosonfirst-uri"
+	"github.com/whosonfirst/go-whosonfirst/v4/export"
+	"github.com/whosonfirst/go-whosonfirst/v4/feature/properties"
+	wof_reader "github.com/whosonfirst/go-whosonfirst/v4/reader"
+	"github.com/whosonfirst/go-whosonfirst/v4/uri"
 	"github.com/whosonfirst/go-writer/v3"
 )
 

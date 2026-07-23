@@ -10,7 +10,7 @@ import (
 	"log/slog"
 	"os"
 
-	_ "github.com/whosonfirst/go-whosonfirst-iterate-git/v3"
+	_ "github.com/whosonfirst/go-whosonfirst/v4/iterate/git"
 
 	"github.com/sfomuseum/go-sfomuseum/airfield/airports/sfomuseum"
 )

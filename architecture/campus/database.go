@@ -12,8 +12,8 @@ import (
 	sfom_sql "github.com/sfomuseum/go-database/sql"
 	"github.com/sfomuseum/go-edtf"
 	"github.com/tidwall/gjson"
-	wof_indexer "github.com/whosonfirst/go-whosonfirst-database/sql/indexer"
-	wof_tables "github.com/whosonfirst/go-whosonfirst-database/sql/tables"
+	wof_indexer "github.com/whosonfirst/go-whosonfirst/v4/database/sql/indexer"
+	wof_tables "github.com/whosonfirst/go-whosonfirst/v4/database/sql/tables"
 )
 
 var WARN_IS_CURRENT = true

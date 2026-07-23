@@ -6,9 +6,9 @@ import (
 	"io"
 
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-feature/properties"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v3"
-	"github.com/whosonfirst/go-whosonfirst-uri"
+	"github.com/whosonfirst/go-whosonfirst/v4/feature/properties"
+	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
+	"github.com/whosonfirst/go-whosonfirst/v4/uri"
 )
 
 func CompilePublicArtWorksData(ctx context.Context, iterator_uri string, iterator_sources ...string) ([]*PublicArtWork, error) {
