@@ -17,6 +17,25 @@ compile:
 	@make compile-wof
 	@make compile-placetypes
 	@make compile-spatial
+	@make compile-opensearch
+	@make compile-twitter
+	@make compile-instagram
+
+compile-instagram:
+	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-instagram-emit cmd/sfom-instagram-emit/main.go
+	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-instagram-derive-media-json cmd/sfom-instagram-derive-media-json/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-instagram-publish cmd/sfom-instagram-publish/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-instagram-assign-hash cmd/sfom-instagram-assign-hash/main.go
+
+compile-twitter:
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-twitter-emit cmd/sfom-twitter-emit/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-twitter-pointers cmd/sfom-twitter-pointers/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-twitter-trim cmd/sfom-twitter-trim/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-twitter-unshorten cmd/sfom-twitter-unshorten/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-twitter-publish cmd/sfom-twitter-publish/main.go
+
+compile-opensearch:
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-opensearch-index cmd/sfom-opensearch-index/main.go
 
 compile-spatial:
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-spatial-update-hierarchies cmd/sfom-spatial-update-hierarchies/main.go
@@ -46,9 +65,9 @@ compile-georef:
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-georef-recompile-subject cmd/sfom-georef-recompile-subject/main.go
 
 compile-maps:
-	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-maps-catalog-js cmd/sfom-maps-catalog-js/main.go
-	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-maps-qgis-tile-connections cmd/sfom-maps-qgis-tile-connections/main.go
-	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-maps-new cmd/sfom-maps-new/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-maps-catalog-js cmd/sfom-maps-catalog-js/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-maps-qgis-tile-connections cmd/sfom-maps-qgis-tile-connections/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-maps-new cmd/sfom-maps-new/main.go
 
 compile-airfield:
 	@make compile-airlines
@@ -94,13 +113,13 @@ compile-galleries:
 	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" cmd/compile-galleries-data/main.go
 
 compile-publicart-data:
-	go run -mod $(GOMOD) -ldflags="-s -w" cmd/compile-publicart-data/main.go
+	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" cmd/compile-publicart-data/main.go
 
 compile-exhibitions-data:
-	go run -mod $(GOMOD) -ldflags="-s -w" cmd/compile-exhibitions-data/main.go
+	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" cmd/compile-exhibitions-data/main.go
 
 compile-collection-data:
-	go run -mod $(GOMOD) -ldflags="-s -w" cmd/compile-collection-data/main.go
+	go run -mod $(GOMOD) -ldflags="$(LDFLAGS)" cmd/compile-collection-data/main.go
 
 
 # Lambda
@@ -126,6 +145,11 @@ placetypes-spec:
 	# go run cmd/sfom-placetypes-compile-spec/main.go > dist/placetypes.json.tmp
 	# cp dist/placetypes.json.tmp dist/placetypes.json
 	# go run cmd/sfom-placetypes-render-spec/main.go -path placetypes/docs/images/placetypes.png
+
+# Instagram
+
+ig-training-data:
+	curl -o instagram/data/english.json https://raw.githubusercontent.com/neurosnap/sentences/main/data/english.json
 
 # Maps
 
