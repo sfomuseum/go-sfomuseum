@@ -15,6 +15,14 @@ compile:
 	@make compile-maps
 	@make compile-geo
 	@make compile-wof
+	@make compile-placetypes
+	@make compile-spatial
+
+compile-spatial:
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-spatial-update-hierarchies cmd/sfom-spatial-update-hierarchies/main.go
+
+compile-placetypes:
+	@echo "compile plactypes tools"
 
 compile-wof:
 	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)"  -o bin/sfom-wof-import-features cmd/sfom-wof-import-features/main.go
@@ -109,6 +117,15 @@ lambda-wof-import:
 	GOARCH=arm64 GOOS=linux go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -tags lambda.norpc -o bootstrap cmd/sfom-wof-import-features/main.go
 	zip sfom-wof-import-features.zip bootstrap
 	rm -f bootstrap
+
+# Placetypes
+
+placetypes-spec:
+	@echo "please fix me"
+	# cp placetypes/placetypes.json dist/placetypes.json.last
+	# go run cmd/sfom-placetypes-compile-spec/main.go > dist/placetypes.json.tmp
+	# cp dist/placetypes.json.tmp dist/placetypes.json
+	# go run cmd/sfom-placetypes-render-spec/main.go -path placetypes/docs/images/placetypes.png
 
 # Maps
 
