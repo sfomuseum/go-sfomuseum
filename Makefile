@@ -8,29 +8,20 @@ vuln:
 ITERATOR_URI=git:///tmp?exclude=properties.edtf:deprecated=.*
 ITERATOR_SOURCE=https://github.com/sfomuseum-data/sfomuseum-data-maps.git
 
-maps-refresh:
-	@make compile-maps
-	@make maps_catalog
-	@make maps_tile_connections
-
-maps-refresh-local:
-	@make compile-maps
-	@make maps-catalog ITERATOR_URI=repo://?exclude=properties.edtf:deprecated=.* ITERATOR_SOURCE=/usr/local/data/sfomuseum-data-maps
-	@make maps-tile-connections  ITERATOR_URI=repo://?exclude=properties.edtf:deprecated=.* ITERATOR_SOURCE=/usr/local/data/sfomuseum-data-maps
-
-maps-catalog:	
-	./bin/sfom-maps-catalog-js -iterator-uri $(ITERATOR_URI) -iterator-source $(ITERATOR_SOURCE) > dist/sfomuseum.maps.catalog.js
-
-maps-tile-connections:
-	./bin/qgis-tile-connections -iterator-uri $(ITERATOR_URI) -iterator-source $(ITERATOR_SOURCE) > dist/sfomuseum.maps.tileconnections.xml
-
-
 compile:
 	@make compile-airfield
 	@make compile-architecture
 	@make compile-curatorial
 	@make compile-maps
 	@make compile-geo
+	@make compile-wof
+
+compile-wof:
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)"  -o bin/sfom-wof-import-features cmd/sfom-wof-import-features/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)"  -o bin/sfom-wof-refresh-features cmd/sfom-wof-refresh-features/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)"  -o bin/sfom-wof-ensure-properties cmd/sfom-wof-ensure-properties/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)"  -o bin/sfom-wof-merge-properties cmd/sfom-wof-merge-properties/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)"  -o bin/sfom-wof-ensure-features cmd/sfom-wof-ensure-features/main.go
 
 compile-geo:
 	@make compile-geotag
@@ -102,6 +93,40 @@ compile-exhibitions-data:
 
 compile-collection-data:
 	go run -mod $(GOMOD) -ldflags="-s -w" cmd/compile-collection-data/main.go
+
+
+# Lambda
+
+lambda:
+	@make lambda-wof
+
+lambda-wof:
+	@make lambda-wof-import
+
+lambda-wof-import:
+	if test -f bootstrap; then rm -f bootstrap; fi
+	if test -f sfom-wof-import-features.zip; then rm -f sfom-wof-import-features.zip; fi
+	GOARCH=arm64 GOOS=linux go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -tags lambda.norpc -o bootstrap cmd/sfom-wof-import-features/main.go
+	zip sfom-wof-import-features.zip bootstrap
+	rm -f bootstrap
+
+# Maps
+
+maps-refresh:
+	@make compile-maps
+	@make maps_catalog
+	@make maps_tile_connections
+
+maps-refresh-local:
+	@make compile-maps
+	@make maps-catalog ITERATOR_URI=repo://?exclude=properties.edtf:deprecated=.* ITERATOR_SOURCE=/usr/local/data/sfomuseum-data-maps
+	@make maps-tile-connections  ITERATOR_URI=repo://?exclude=properties.edtf:deprecated=.* ITERATOR_SOURCE=/usr/local/data/sfomuseum-data-maps
+
+maps-catalog:	
+	./bin/sfom-maps-catalog-js -iterator-uri $(ITERATOR_URI) -iterator-source $(ITERATOR_SOURCE) > dist/sfomuseum.maps.catalog.js
+
+maps-tile-connections:
+	./bin/qgis-tile-connections -iterator-uri $(ITERATOR_URI) -iterator-source $(ITERATOR_SOURCE) > dist/sfomuseum.maps.tileconnections.xml
 
 # subject (object):
 # https://collection.sfomuseum.org/objects/1897902471/

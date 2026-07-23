@@ -3,16 +3,19 @@ module github.com/sfomuseum/go-sfomuseum
 go 1.26.5
 
 require (
+	github.com/aaronland/go-aws/v3 v3.5.3
 	github.com/aaronland/go-roster v1.0.0
 	github.com/aws/aws-lambda-go v1.54.0
 	github.com/jtacoma/uritemplates v1.0.0
 	github.com/mattn/go-sqlite3 v1.14.48
+	github.com/mitchellh/go-wordwrap v1.0.1
 	github.com/paulmach/orb v0.13.0
 	github.com/sfomuseum/go-database v0.0.18
 	github.com/sfomuseum/go-edtf v1.3.0
 	github.com/sfomuseum/go-flags v0.12.1
 	github.com/sfomuseum/go-geojson-geotag/v2 v2.0.0
 	github.com/tidwall/gjson v1.19.0
+	github.com/tidwall/pretty v1.2.1
 	github.com/tidwall/sjson v1.2.5
 	github.com/whosonfirst/go-ioutil v1.0.2
 	github.com/whosonfirst/go-reader-github/v2 v2.0.4
@@ -28,7 +31,6 @@ require (
 	github.com/Microsoft/go-winio v0.6.2 // indirect
 	github.com/ProtonMail/go-crypto v1.1.6 // indirect
 	github.com/aaronland/go-artisanal-integers v0.9.1 // indirect
-	github.com/aaronland/go-aws/v3 v3.5.3 // indirect
 	github.com/aaronland/go-brooklynintegers-api v1.2.10 // indirect
 	github.com/aaronland/go-json-query v0.1.6 // indirect
 	github.com/aaronland/go-pool/v2 v2.0.0 // indirect
@@ -58,6 +60,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.11.23 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.27 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.19.27 // indirect
+	github.com/aws/aws-sdk-go-v2/service/lambda v1.90.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.103.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/signin v1.1.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.68.6 // indirect
@@ -98,7 +101,6 @@ require (
 	github.com/tidwall/geoindex v1.4.4 // indirect
 	github.com/tidwall/geojson v1.4.6 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
-	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/rtree v1.3.1 // indirect
 	github.com/whosonfirst/go-rfc-5646 v0.1.0 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect

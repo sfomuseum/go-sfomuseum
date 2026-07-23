@@ -39,6 +39,7 @@ github.com/aaronland/go-artisanal-integers/client
 ## explicit; go 1.25.0
 github.com/aaronland/go-aws/v3/auth
 github.com/aaronland/go-aws/v3/dynamodb
+github.com/aaronland/go-aws/v3/lambda
 # github.com/aaronland/go-brooklynintegers-api v1.2.10
 ## explicit; go 1.22
 github.com/aaronland/go-brooklynintegers-api
@@ -184,6 +185,11 @@ github.com/aws/aws-sdk-go-v2/service/internal/presigned-url
 github.com/aws/aws-sdk-go-v2/service/internal/s3shared
 github.com/aws/aws-sdk-go-v2/service/internal/s3shared/arn
 github.com/aws/aws-sdk-go-v2/service/internal/s3shared/config
+# github.com/aws/aws-sdk-go-v2/service/lambda v1.90.1
+## explicit; go 1.24
+github.com/aws/aws-sdk-go-v2/service/lambda
+github.com/aws/aws-sdk-go-v2/service/lambda/internal/endpoints
+github.com/aws/aws-sdk-go-v2/service/lambda/types
 # github.com/aws/aws-sdk-go-v2/service/s3 v1.103.1
 ## explicit; go 1.24
 github.com/aws/aws-sdk-go-v2/service/s3
@@ -410,6 +416,9 @@ github.com/klauspost/cpuid/v2
 # github.com/mattn/go-sqlite3 v1.14.48
 ## explicit; go 1.21
 github.com/mattn/go-sqlite3
+# github.com/mitchellh/go-wordwrap v1.0.1
+## explicit; go 1.14
+github.com/mitchellh/go-wordwrap
 # github.com/natefinch/atomic v1.0.1
 ## explicit; go 1.12
 github.com/natefinch/atomic
@@ -508,6 +517,7 @@ github.com/whosonfirst/go-whosonfirst/v4/feature/alt
 github.com/whosonfirst/go-whosonfirst/v4/feature/constants
 github.com/whosonfirst/go-whosonfirst/v4/feature/geometry
 github.com/whosonfirst/go-whosonfirst/v4/feature/properties
+github.com/whosonfirst/go-whosonfirst/v4/fetch
 github.com/whosonfirst/go-whosonfirst/v4/findingaid/reader
 github.com/whosonfirst/go-whosonfirst/v4/findingaid/resolver
 github.com/whosonfirst/go-whosonfirst/v4/flags

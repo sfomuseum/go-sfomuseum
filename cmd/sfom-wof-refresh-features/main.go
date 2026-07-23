@@ -1,0 +1,165 @@
+// refresh-features is a command line tool for refreshing all the source Who's On First records in
+// the sfomuseum-data-whosonfirst repository.
+package main
+
+import (
+	"context"
+	"flag"
+	"fmt"
+	"log"
+	"net/url"
+	"os"
+
+	_ "github.com/whosonfirst/go-reader-github/v2"
+	_ "github.com/whosonfirst/go-whosonfirst/v4/findingaid/reader"
+
+	"github.com/sfomuseum/go-sfomuseum/whosonfirst/custom"
+	"github.com/whosonfirst/go-reader/v2"
+	"github.com/whosonfirst/go-whosonfirst/v4/fetch"
+	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
+	"github.com/whosonfirst/go-whosonfirst/v4/uri"
+	"github.com/whosonfirst/go-writer/v3"
+)
+
+func main() {
+
+	iterator_uri := flag.String("data-iterator-uri", "repo://", "A valid whosonfirst/go-whosonfirst-iterate/v2 URI")
+	iterator_source := flag.String("data-iterator-source", "/usr/local/data/sfomuseum-data-whosonfirst", "...")
+
+	wof_reader_uri := flag.String("whosonfirst-reader-uri", fetch.WHOSONFIRST_DATA_READER_URI, "A valid whosonfirst/go-reader URI.")
+
+	data_reader_uri := flag.String("data-reader-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/data", "A valid whosonfirst/go-reader URI.")
+	properties_reader_uri := flag.String("properties-reader-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/properties", "A valid whosonfirst/go-reader URI.")
+
+	data_writer_uri := flag.String("data-writer-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/data", "A valid whosonfirst/go-writer URI.")
+	properties_writer_uri := flag.String("properties-writer-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/properties", "A valid whosonfirst/go-writer URI.")
+
+	retries := flag.Int("retries", 3, "The maximum number of attempts to try fetching a record.")
+	max_clients := flag.Int("max-clients", 10, "The maximum number of concurrent requests for multiple Who's On First records.")
+
+	user_agent := flag.String("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0", "An optional user-agent to append to the -whosonfirst-reader-uri flag")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "refresh-features is a command line tool for refreshing all the source Who's On First records in the sfomuseum-data-whosonfirst repository.\n")
+		fmt.Fprintf(os.Stderr, "Usage:\n\t %s [options]\n", os.Args[0])
+		flag.PrintDefaults()
+	}
+
+	flag.Parse()
+
+	ctx := context.Background()
+
+	if *user_agent != "" {
+
+		wof_u, err := url.Parse(*wof_reader_uri)
+
+		if err != nil {
+			log.Fatalf("Failed to parse (WOF) reader URI, %v", err)
+		}
+
+		q := wof_u.Query()
+		q.Set("user-agent", *user_agent)
+
+		wof_u.RawQuery = q.Encode()
+		*wof_reader_uri = wof_u.String()
+	}
+
+	wof_r, err := reader.NewReader(ctx, *wof_reader_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new WOF reader for '%s', %v", *wof_reader_uri, err)
+	}
+
+	data_r, err := reader.NewReader(ctx, *data_reader_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new data reader, %v", err)
+	}
+
+	props_r, err := reader.NewReader(ctx, *properties_reader_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new properties reader, %v", err)
+	}
+
+	data_wr, err := writer.NewWriter(ctx, *data_writer_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new data writer, %v", err)
+	}
+
+	props_wr, err := writer.NewWriter(ctx, *properties_writer_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new properties writer, %v", err)
+	}
+
+	fetcher_opts, err := fetch.DefaultOptions()
+
+	if err != nil {
+		log.Fatalf("Failed to create fetch options, %v", err)
+	}
+
+	fetcher_opts.Retries = *retries
+	fetcher_opts.MaxClients = *max_clients
+
+	fetcher, err := fetch.NewFetcher(ctx, wof_r, data_wr, fetcher_opts)
+
+	if err != nil {
+		log.Fatalf("Failed to create new fetcher, %v", err)
+	}
+
+	sfom_opts := &custom.SFOMuseumPropertiesOptions{
+		DataReader:       data_r,
+		DataWriter:       data_wr,
+		PropertiesReader: props_r,
+		PropertiesWriter: props_wr,
+	}
+
+	belongs_to := []string{
+		"region",
+		"country",
+	}
+
+	iter, err := iterate.NewIterator(ctx, *iterator_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new iterator, %v", err)
+	}
+
+	for rec, err := range iter.Iterate(ctx, *iterator_source) {
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer rec.Body.Close()
+
+		id, _, err := uri.ParseURI(rec.Path)
+
+		if err != nil {
+			log.Fatalf("Failed to derive ID from %s, %v", rec.Path, err)
+		}
+
+		// START OF put me in a function
+
+		to_fetch := []int64{id}
+
+		_, err = fetcher.FetchIDs(ctx, to_fetch, belongs_to...)
+
+		if err != nil {
+
+			fmt.Printf("Failed to fetch %d (%s), %v", id, rec.Path, err)
+			continue
+		}
+
+		err = custom.ApplySFOMuseumProperties(ctx, sfom_opts, id)
+
+		if err != nil {
+			log.Fatalf("Failed to apply SFO Museum properties for %d (%s), %v", id, rec.Path, err)
+		}
+
+		// END OF put me in a function
+	}
+
+}

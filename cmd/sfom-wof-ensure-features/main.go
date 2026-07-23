@@ -1,0 +1,251 @@
+package main
+
+import (
+	"context"
+	"flag"
+	"io"
+	"log"
+	"log/slog"
+	"net/url"
+	"sync"
+
+	_ "github.com/whosonfirst/go-reader-github/v2"
+
+	"github.com/sfomuseum/go-sfomuseum/whosonfirst/custom"
+	wof_import "github.com/sfomuseum/go-sfomuseum/whosonfirst/import"
+	"github.com/tidwall/gjson"
+	"github.com/whosonfirst/go-reader/v2"
+	"github.com/whosonfirst/go-whosonfirst/v4/fetch"
+	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
+	"github.com/whosonfirst/go-whosonfirst/v4/uri"
+	"github.com/whosonfirst/go-writer/v3"
+)
+
+func main() {
+
+	var iterator_uri string
+	var wof_reader_uri string
+
+	var data_reader_uri string
+	var properties_reader_uri string
+
+	var data_writer_uri string
+	var properties_writer_uri string
+
+	var retries int
+	var max_clients int
+
+	var user_agent string
+
+	var verbose bool
+	var strict bool
+
+	flag.StringVar(&iterator_uri, "iterator-uri", "repo://", "")
+
+	flag.StringVar(&wof_reader_uri, "whosonfirst-reader-uri", "https://data.whosonfirst.org/", "A valid whosonfirst/go-reader URI.")
+
+	flag.StringVar(&data_reader_uri, "data-reader-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/data", "A valid whosonfirst/go-reader URI.")
+	flag.StringVar(&properties_reader_uri, "properties-reader-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/properties", "A valid whosonfirst/go-reader URI.")
+
+	flag.StringVar(&data_writer_uri, "data-writer-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/data", "A valid whosonfirst/go-writer URI.")
+	flag.StringVar(&properties_writer_uri, "properties-writer-uri", "fs:///usr/local/data/sfomuseum-data-whosonfirst/properties", "A valid whosonfirst/go-writer URI.")
+
+	flag.IntVar(&retries, "retries", 3, "The maximum number of attempts to try fetching a record.")
+	flag.IntVar(&max_clients, "max-clients", 10, "The maximum number of concurrent requests for multiple Who's On First records.")
+
+	flag.StringVar(&user_agent, "user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X x.y; rv:10.0) Gecko/20100101 Firefox/10.0", "An optional user-agent to append to the -whosonfirst-reader-uri flag")
+
+	flag.BoolVar(&strict, "strict", false, "Throw errors if any record fails to be retrieved.")
+	flag.BoolVar(&verbose, "verbose", false, "Enable verbose (debug) logging.")
+
+	flag.Parse()
+
+	iterator_sources := flag.Args()
+
+	ctx := context.Background()
+
+	if verbose {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+		slog.Debug("Verbose logging enabled")
+	}
+
+	if user_agent != "" {
+
+		wof_u, err := url.Parse(wof_reader_uri)
+
+		if err != nil {
+			log.Fatalf("Failed to parse (WOF) reader URI, %v", err)
+		}
+
+		q := wof_u.Query()
+		q.Set("user-agent", user_agent)
+
+		wof_u.RawQuery = q.Encode()
+		wof_reader_uri = wof_u.String()
+
+		slog.Debug("Set user agent", "agent", user_agent)
+	}
+
+	wof_r, err := reader.NewReader(ctx, wof_reader_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new WOF reader for '%s', %v", wof_reader_uri, err)
+	}
+
+	data_r, err := reader.NewReader(ctx, data_reader_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new data reader, %v", err)
+	}
+
+	props_r, err := reader.NewReader(ctx, properties_reader_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new properties reader, %v", err)
+	}
+
+	data_wr, err := writer.NewWriter(ctx, data_writer_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new data writer, %v", err)
+	}
+
+	props_wr, err := writer.NewWriter(ctx, properties_writer_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new properties writer, %v", err)
+	}
+
+	query_paths := []string{
+		"properties.geotag:whosonfirst_belongsto",
+	}
+
+	features_map := new(sync.Map)
+
+	iter, err := iterate.NewIterator(ctx, iterator_uri)
+
+	if err != nil {
+		log.Fatalf("Failed to create new iterator, %v", err)
+	}
+
+	for rec, err := range iter.Iterate(ctx, iterator_sources...) {
+
+		select {
+		case <-ctx.Done():
+			break
+		default:
+			// pass
+		}
+
+		if err != nil {
+			log.Fatalf("Failed to iterate, %v", err)
+		}
+
+		defer rec.Body.Close()
+
+		_, uri_args, err := uri.ParseURI(rec.Path)
+
+		if err != nil {
+			log.Fatalf("Failed to parse %s, %v", rec.Path, err)
+		}
+
+		if uri_args.IsAlternate {
+			continue
+		}
+
+		body, err := io.ReadAll(rec.Body)
+
+		if err != nil {
+			log.Fatalf("Failed to read %s, %v", rec.Path, err)
+		}
+
+		done_ch := make(chan bool)
+
+		for _, p := range query_paths {
+
+			go func(ctx context.Context, p string) {
+
+				rsp := gjson.GetBytes(body, p)
+
+				if rsp.Exists() {
+
+					for _, r := range rsp.Array() {
+						features_map.Store(r.Int(), true)
+					}
+				}
+
+				done_ch <- true
+
+			}(ctx, p)
+		}
+
+		remaining := len(query_paths)
+
+		for remaining > 0 {
+			select {
+			case <-done_ch:
+				remaining -= 1
+			}
+		}
+
+	}
+
+	//
+
+	feature_ids := make([]int64, 0)
+
+	features_map.Range(func(k interface{}, v interface{}) bool {
+
+		id := k.(int64)
+
+		if id > -1 {
+			slog.Info("Schedule record for fetching", "id", id)
+			feature_ids = append(feature_ids, id)
+		}
+
+		return true
+	})
+
+	//
+
+	fetcher_opts, err := fetch.DefaultOptions()
+
+	if err != nil {
+		log.Fatalf("Failed to create fetch options, %v", err)
+	}
+
+	fetcher_opts.Retries = retries
+	fetcher_opts.MaxClients = max_clients
+	fetcher_opts.Strict = strict
+
+	fetcher, err := fetch.NewFetcher(ctx, wof_r, data_wr, fetcher_opts)
+
+	if err != nil {
+		log.Fatalf("Failed to create new fetcher, %v", err)
+	}
+
+	sfom_opts := &custom.SFOMuseumPropertiesOptions{
+		DataReader:       data_r,
+		DataWriter:       data_wr,
+		PropertiesReader: props_r,
+		PropertiesWriter: props_wr,
+	}
+
+	belongs_to := []string{
+		"region",
+		"country",
+	}
+
+	import_opts := &wof_import.ImportFeatureOptions{
+		Fetcher:           fetcher,
+		PropertiesOptions: sfom_opts,
+		BelongsTo:         belongs_to,
+	}
+
+	err = wof_import.ImportFeatures(ctx, import_opts, feature_ids...)
+
+	if err != nil {
+		log.Fatalf("Failed to import features, %v", err)
+	}
+
+}
