@@ -11,7 +11,7 @@ import (
 	"sync"
 
 	_ "gocloud.dev/blob/fileblob"
-	
+
 	"github.com/sfomuseum/go-sfomuseum/twitter"
 	"github.com/sfomuseum/go-sfomuseum/twitter/walk"
 	"github.com/tidwall/gjson"
@@ -115,7 +115,7 @@ func main() {
 
 	write_row([]string{"property", "value"})
 
-	mentions.Range(func(key interface{}, value interface{}) bool {
+	mentions.Range(func(key any, value any) bool {
 
 		user := key.(string)
 
@@ -127,7 +127,7 @@ func main() {
 		return write_row(out)
 	})
 
-	hashtags.Range(func(key interface{}, value interface{}) bool {
+	hashtags.Range(func(key any, value any) bool {
 
 		tag := key.(string)
 

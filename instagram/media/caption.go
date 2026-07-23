@@ -80,7 +80,7 @@ func ParseCaption(ctx context.Context, body string) (*Caption, error) {
 
 		trim_hashtags := strings.TrimSpace(str_hashtags)
 
-		for _, tag := range strings.Split(trim_hashtags, " ") {
+		for tag := range strings.SplitSeq(trim_hashtags, " ") {
 
 			if strings.HasPrefix(tag, "#") {
 				tag = strings.Replace(tag, "#", "", 1)

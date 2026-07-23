@@ -8,13 +8,13 @@ import (
 	"sync"
 	"time"
 
-	wof_reader "github.com/whosonfirst/go-whosonfirst/v4/reader"
 	"github.com/sfomuseum/go-sfomuseum/twitter/document"
 	sfom_writer "github.com/sfomuseum/go-sfomuseum/writer"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"github.com/whosonfirst/go-reader/v2"
 	"github.com/whosonfirst/go-whosonfirst/v4/export"
+	wof_reader "github.com/whosonfirst/go-whosonfirst/v4/reader"
 	"github.com/whosonfirst/go-writer/v3"
 )
 
@@ -122,7 +122,7 @@ func PublishTweet(ctx context.Context, opts *PublishOptions, body []byte) error 
 		}
 	*/
 
-	var tw interface{}
+	var tw any
 
 	err = json.Unmarshal(tweet_body, &tw)
 
@@ -130,7 +130,7 @@ func PublishTweet(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return err
 	}
 
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"properties.twitter:tweet": tw,
 	}
 
@@ -145,7 +145,7 @@ func PublishTweet(ctx context.Context, opts *PublishOptions, body []byte) error 
 		hashtags_lookup.Store(t.String(), true)
 	}
 
-	hashtags_lookup.Range(func(k interface{}, v interface{}) bool {
+	hashtags_lookup.Range(func(k any, v any) bool {
 		hashtags = append(hashtags, k.(string))
 		return true
 	})
@@ -165,7 +165,7 @@ func PublishTweet(ctx context.Context, opts *PublishOptions, body []byte) error 
 		mentions_lookup.Store(n.String(), true)
 	}
 
-	mentions_lookup.Range(func(k interface{}, v interface{}) bool {
+	mentions_lookup.Range(func(k any, v any) bool {
 		mentions = append(mentions, k.(string))
 		return true
 	})
@@ -210,7 +210,7 @@ func newWOFRecord(ctx context.Context) ([]byte, error) {
 	lat := 37.616356
 	lon := -122.386166
 
-	hier := []map[string]interface{}{
+	hier := []map[string]any{
 		{
 			"building_id":      1159160869,
 			"campus_id":        102527513,
@@ -223,14 +223,14 @@ func newWOFRecord(ctx context.Context) ([]byte, error) {
 		},
 	}
 
-	geom := map[string]interface{}{
+	geom := map[string]any{
 		"type":        "Point",
 		"coordinates": [2]float64{lon, lat},
 	}
 
-	feature := map[string]interface{}{
+	feature := map[string]any{
 		"type": "Feature",
-		"properties": map[string]interface{}{
+		"properties": map[string]any{
 			"sfomuseum:placetype": "tweet",
 			"src:geom":            "sfomuseum",
 			"wof:country":         "US",

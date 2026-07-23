@@ -9,12 +9,12 @@ import (
 	"sync/atomic"
 
 	_ "github.com/whosonfirst/go-whosonfirst/v4/iterate/git"
-	
+
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
 )
 
-func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (*sync.Map, error) {
+func BuildLookup(ctx context.Context, iterator_uri string, iterator_path string) (*sync.Map, error) {
 
 	lookup := new(sync.Map)
 	count := int32(0)
@@ -25,12 +25,12 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 		return nil, err
 	}
 
-	for rec, err := range iter.Iterate(ctx, indexer_path) {
+	for rec, err := range iter.Iterate(ctx, iterator_path) {
 
 		if err != nil {
 			return nil, err
 		}
-		
+
 		body, err := io.ReadAll(rec.Body)
 
 		if err != nil {
@@ -38,7 +38,7 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 		}
 
 		rec.Body.Close()
-		
+
 		wof_rsp := gjson.GetBytes(body, "properties.wof:id")
 
 		if !wof_rsp.Exists() {
@@ -58,7 +58,7 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 			m, err := DeriveMediaId(body, "properties.instagram:post")
 
 			if err != nil {
-				return fmt.Errorf("Failed to derive media ID for %s, %w", rec.Path, err)
+				return nil, fmt.Errorf("Failed to derive media ID for %s, %w", rec.Path, err)
 			}
 
 			media_id = m

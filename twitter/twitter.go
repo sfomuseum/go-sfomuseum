@@ -4,11 +4,10 @@ import (
 	"bytes"
 	"context"
 	"io"
-	"io/ioutil"
-	"path/filepath"
 	"log"
+	"path/filepath"
 
-	"gocloud.dev/blob"	
+	"gocloud.dev/blob"
 )
 
 const JAVASCRIPT_PREFIX string = "window.YTD.tweet.part0 = "
@@ -24,7 +23,7 @@ func OpenTweets(ctx context.Context, tweets_uri string, opts *OpenTweetsOptions)
 
 	log.Println(tweets_root)
 	log.Println(tweets_fname)
-	
+
 	tweets_bucket, err := blob.OpenBucket(ctx, tweets_root)
 
 	if err != nil {
@@ -66,7 +65,7 @@ func trimPrefix(ctx context.Context, fh io.Reader, prefix string) (io.ReadCloser
 	offset := int64(len(prefix))
 	whence := 0
 
-	body, err := ioutil.ReadAll(fh)
+	body, err := io.ReadAll(fh)
 
 	if err != nil {
 		return nil, err
@@ -80,7 +79,7 @@ func trimPrefix(ctx context.Context, fh io.Reader, prefix string) (io.ReadCloser
 		return nil, err
 	}
 
-	return ioutil.NopCloser(br), nil
+	return io.NopCloser(br), nil
 
 	// var buf bytes.Buffer
 	// tee := io.TeeReader(fh, &buf)

@@ -7,12 +7,12 @@ import (
 	"log/slog"
 
 	_ "github.com/whosonfirst/go-whosonfirst/v4/iterate/git"
-	
+
 	"github.com/sfomuseum/go-flags/flagset"
-	"github.com/sfomuseum/go-flags/lookup"	
+	"github.com/sfomuseum/go-flags/lookup"
 	"github.com/sfomuseum/go-sfomuseum/database/opensearch/document"
-	es_document "github.com/whosonfirst/go-whosonfirst-elasticsearch/document"
 	iterwriter_app "github.com/whosonfirst/go-whosonfirst/v4/app/iterate/writer"
+	os_document "github.com/whosonfirst/go-whosonfirst/v4/database/opensearch/document"
 	os_writer "github.com/whosonfirst/go-whosonfirst/v4/database/opensearch/writer"
 	"github.com/whosonfirst/go-writer/v3"
 )
@@ -21,7 +21,6 @@ func main() {
 
 	var sfom_writer_uri string
 	var index_embeddings bool
-
 
 	fs := iterwriter_app.DefaultFlagSet()
 
@@ -35,7 +34,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	logger := slog.Default()
 	log_level := slog.LevelInfo
 
@@ -65,7 +64,7 @@ func main() {
 
 	// To do: Some day we may have multiple prepare document funcs
 
-	var sfom_prepare_func es_document.PrepareDocumentFunc
+	var sfom_prepare_func os_document.PrepareDocumentFunc
 
 	if index_embeddings {
 		sfom_prepare_func = document.SFOMuseumPrepareEmbeddingsDocumentFunc()
@@ -89,7 +88,7 @@ func main() {
 
 	run_opts.Writer = wr
 
-	err = iterwriter_app.RunWithOptions(ctx, run_opts, slog.Default())
+	err = iterwriter_app.RunWithOptions(ctx, run_opts)
 
 	if err != nil {
 		log.Fatalf("Failed to run iterwriter, %v", err)

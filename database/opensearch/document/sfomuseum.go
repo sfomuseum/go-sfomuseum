@@ -9,10 +9,10 @@ import (
 	"github.com/sfomuseum/go-sfomuseum/instagram/media"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
-	es_document "github.com/whosonfirst/go-whosonfirst-elasticsearch/document"
+	os_document "github.com/whosonfirst/go-whosonfirst/v4/database/opensearch/document"
 )
 
-func SFOMuseumPrepareDocumentFunc() es_document.PrepareDocumentFunc {
+func SFOMuseumPrepareDocumentFunc() os_document.PrepareDocumentFunc {
 
 	sfom_f := func(ctx context.Context, body []byte) ([]byte, error) {
 

@@ -7,11 +7,11 @@ import (
 
 	_ "github.com/sfomuseum/go-sfomuseum/export"
 	_ "gocloud.dev/blob/fileblob"
-	
+
 	"github.com/sfomuseum/go-sfomuseum/twitter"
 	"github.com/sfomuseum/go-sfomuseum/twitter/publish"
 	"github.com/sfomuseum/go-sfomuseum/twitter/walk"
-	"github.com/whosonfirst/go-reader"
+	"github.com/whosonfirst/go-reader/v2"
 	"github.com/whosonfirst/go-whosonfirst/v4/export"
 	"github.com/whosonfirst/go-writer/v3"
 )
@@ -80,7 +80,7 @@ func main() {
 	max_procs := 10
 	throttle := make(chan bool, max_procs)
 
-	for i := 0; i < max_procs; i++ {
+	for range max_procs {
 		throttle <- true
 	}
 

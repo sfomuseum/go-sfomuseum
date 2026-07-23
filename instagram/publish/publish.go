@@ -10,11 +10,11 @@ import (
 	"time"
 
 	"github.com/sfomuseum/go-sfomuseum/instagram/media"
-	wof_reader "github.com/whosonfirst/go-whosonfirst/v4/reader"	
 	sfom_writer "github.com/sfomuseum/go-sfomuseum/writer"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
-	"github.com/whosonfirst/go-reader"
+	"github.com/whosonfirst/go-reader/v2"
+	wof_reader "github.com/whosonfirst/go-whosonfirst/v4/reader"
 	"github.com/whosonfirst/go-writer/v3"
 	"gocloud.dev/blob"
 )
@@ -217,7 +217,7 @@ func PublishMedia(ctx context.Context, opts *PublishOptions, body []byte) error 
 		return err
 	}
 
-	var post interface{}
+	var post any
 
 	err = json.Unmarshal(body, &post)
 
@@ -253,7 +253,7 @@ func newWOFRecord(ctx context.Context) ([]byte, error) {
 	lat := 37.616356
 	lon := -122.386166
 
-	hier := []map[string]interface{}{
+	hier := []map[string]any{
 		{
 			"building_id":      1159160869,
 			"campus_id":        102527513,
@@ -266,14 +266,14 @@ func newWOFRecord(ctx context.Context) ([]byte, error) {
 		},
 	}
 
-	geom := map[string]interface{}{
+	geom := map[string]any{
 		"type":        "Point",
 		"coordinates": [2]float64{lon, lat},
 	}
 
-	feature := map[string]interface{}{
+	feature := map[string]any{
 		"type": "Feature",
-		"properties": map[string]interface{}{
+		"properties": map[string]any{
 			"sfomuseum:placetype": "instagram",
 			"src:geom":            "sfomuseum",
 			"wof:country":         "US",

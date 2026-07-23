@@ -7,7 +7,7 @@ import (
 
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
-	es_document "github.com/whosonfirst/go-whosonfirst-elasticsearch/document"
+	os_document "github.com/whosonfirst/go-whosonfirst/v4/database/opensearch/document"
 )
 
 // SFOMuseumPrepareEmbeddingsDocumentFunc returns a `es_document.PrepareDocumentFunc` function
@@ -15,7 +15,7 @@ import (
 // Note: As of this writing there is a hardcoded list of fields to read and a single hardcoded field
 // in to which those data are stored. This is not ideal and it would be better to have something with
 // sensible defaults that could be overridden. That does not exist today.
-func SFOMuseumPrepareEmbeddingsDocumentFunc() es_document.PrepareDocumentFunc {
+func SFOMuseumPrepareEmbeddingsDocumentFunc() os_document.PrepareDocumentFunc {
 
 	sfom_f := func(ctx context.Context, body []byte) ([]byte, error) {
 

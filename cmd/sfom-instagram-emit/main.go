@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 
 	_ "gocloud.dev/blob/fileblob"
-	
+
 	"github.com/aaronland/go-json-query"
 	"github.com/sfomuseum/go-sfomuseum/instagram/media"
 	"github.com/sfomuseum/go-sfomuseum/instagram/walk"

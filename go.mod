@@ -22,10 +22,8 @@ require (
 	github.com/tidwall/pretty v1.2.1
 	github.com/tidwall/sjson v1.2.5
 	github.com/whosonfirst/go-ioutil v1.0.2
-	github.com/whosonfirst/go-reader v1.1.0
 	github.com/whosonfirst/go-reader-github/v2 v2.0.4
 	github.com/whosonfirst/go-reader/v2 v2.1.0
-	github.com/whosonfirst/go-whosonfirst-elasticsearch v0.11.0
 	github.com/whosonfirst/go-whosonfirst/v4 v4.3.2
 	github.com/whosonfirst/go-writer-github/v3 v3.1.2
 	github.com/whosonfirst/go-writer/v3 v3.1.1
@@ -171,9 +169,7 @@ require (
 	github.com/tidwall/rtree v1.3.1 // indirect
 	github.com/whosonfirst/go-rfc-5646 v0.1.0 // indirect
 	github.com/whosonfirst/go-sanitize v0.1.0 // indirect
-	github.com/whosonfirst/go-whosonfirst-placetypes v0.7.1 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect
-	github.com/whosonfirst/go-whosonfirst-spelunker v0.0.0-20240320192355-9b5a32a26365 // indirect
 	github.com/whosonfirst/go-whosonfirst-uri v1.3.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	go.mongodb.org/mongo-driver/v2 v2.5.0 // indirect

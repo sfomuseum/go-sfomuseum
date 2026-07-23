@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 
 	_ "github.com/whosonfirst/go-whosonfirst/v4/iterate/git"
-	
+
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
 )
@@ -25,13 +25,13 @@ func BuildLookup(ctx context.Context, indexer_uri string, indexer_path string) (
 	}
 
 	for rec, err := range iter.Iterate(ctx, indexer_path) {
-		
+
 		if err != nil {
 			return nil, fmt.Errorf("Failed to iterate URIs, %w", err)
 		}
 
 		defer rec.Body.Close()
-		
+
 		body, err := io.ReadAll(rec.Body)
 
 		if err != nil {

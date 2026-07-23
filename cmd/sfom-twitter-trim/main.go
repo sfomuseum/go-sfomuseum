@@ -8,7 +8,7 @@ import (
 	"os"
 
 	_ "gocloud.dev/blob/fileblob"
-	
+
 	"github.com/sfomuseum/go-sfomuseum/twitter"
 )
 

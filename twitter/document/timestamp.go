@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/tidwall/gjson"
-	"github.com/tidwall/sjson"	
+	"github.com/tidwall/sjson"
 )
 
 func AppendCreatedAtTimestamp(ctx context.Context, body []byte) ([]byte, error) {

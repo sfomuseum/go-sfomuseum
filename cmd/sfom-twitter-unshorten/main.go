@@ -6,7 +6,7 @@ import (
 	"errors"
 	"flag"
 	"io"
-	"io/ioutil"
+
 	"log"
 	"os"
 	"os/signal"
@@ -18,7 +18,7 @@ import (
 	"github.com/sfomuseum/go-sfomuseum/twitter"
 	"github.com/sfomuseum/go-sfomuseum/twitter/walk"
 	"github.com/sfomuseum/go-url-unshortener"
-	"github.com/tidwall/gjson"	
+	"github.com/tidwall/gjson"
 )
 
 func main() {
@@ -46,7 +46,7 @@ func main() {
 			log.Fatal(err)
 		}
 
-		body, err := ioutil.ReadAll(fh)
+		body, err := io.ReadAll(fh)
 
 		if err != nil {
 			log.Fatal(err)
@@ -197,7 +197,7 @@ func main() {
 
 	report := make(map[string]string)
 
-	lookup.Range(func(k interface{}, v interface{}) bool {
+	lookup.Range(func(k any, v any) bool {
 		shortened_url := k.(string)
 		unshortened_url := v.(string)
 		report[shortened_url] = unshortened_url

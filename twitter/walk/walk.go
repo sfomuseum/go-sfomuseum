@@ -6,7 +6,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/aaronland/go-json-query"	
+	"github.com/aaronland/go-json-query"
 )
 
 type WalkOptions struct {
@@ -81,7 +81,7 @@ func WalkTweets(ctx context.Context, opts *WalkOptions, tweets_fh io.Reader) {
 	}()
 
 	type post struct {
-		Tweet interface{} `json:"tweet"`
+		Tweet any `json:"tweet"`
 	}
 
 	var posts []post
