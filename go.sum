@@ -59,6 +59,8 @@ github.com/aaronland/go-aws/v3 v3.5.3 h1:UUQqJqjOe6hQdUW0qLOAIQ9dG3aNxNNdRCdqnJx
 github.com/aaronland/go-aws/v3 v3.5.3/go.mod h1:9cekNzOXc0Io3/WpHfULvAKAYDWKTisvALW0Qrz06G0=
 github.com/aaronland/go-brooklynintegers-api v1.2.10 h1:1X6VOECYIEes1dKkBc/pq4R6/utUHM6JWhFzBlY8j7E=
 github.com/aaronland/go-brooklynintegers-api v1.2.10/go.mod h1:pDa3IIC5BUZ03ga8ER6IpiDSZpvfokyBXDtEv8NpJKQ=
+github.com/aaronland/go-http/v4 v4.0.4 h1:oWoBqp0JycnAyLqKNFcHDh3DletYq761vfF2NBwknVw=
+github.com/aaronland/go-http/v4 v4.0.4/go.mod h1:TgXvSUijLOFxBbjTV+s3V5NAgyj0YYgYXp6B1slGohQ=
 github.com/aaronland/go-json-query v0.1.6 h1:i4HHIFeZr6jguE/TFWYSJmDZDH2PyrI5MH1YSqJ2F80=
 github.com/aaronland/go-json-query v0.1.6/go.mod h1:acIgF0MbnW5fp/oGaVJAFs692X8ZQTsRoDlklXV3w9Q=
 github.com/aaronland/go-pagination v0.2.0/go.mod h1:zrYVkUTBoe6yJ23l6OyTyfSpTyg6s/cNxZxNztXNQpQ=
@@ -82,6 +84,8 @@ github.com/aaronland/go-uid-whosonfirst v0.0.7 h1:3m+7vOfMrYIY/mfWA2xBbLLPsfqqfi
 github.com/aaronland/go-uid-whosonfirst v0.0.7/go.mod h1:XPPw76MmW1sKX77suxNiS2gZ9h2026mcgvcAsvJyM8U=
 github.com/aaronland/gocloud v1.3.0 h1:G1jloXZFuupa1IkWibYSu5xSrmg08mlSXr+Rc9o2YSo=
 github.com/aaronland/gocloud v1.3.0/go.mod h1:jf8kNQ8VM0got+so6/gdmYwf5hOghDj0By+Z2Cq5tSA=
+github.com/akrylysov/algnhsa v1.1.0 h1:G0SoP16tMRyiism7VNc3JFA0wq/cVgEkp/ExMVnc6PQ=
+github.com/akrylysov/algnhsa v1.1.0/go.mod h1:+bOweRs/WBu5awl+ifCoSYAuKVPAmoTk8XOMrZ1xwiw=
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883 h1:bvNMNQO63//z+xNgfBlViaCIJKLlCJ6/fmUseuG0wVQ=
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo29Kk6CurOXKm700vrz8f0KW0JNfpkRJY/8=
 github.com/anmitsu/go-shlex v0.0.0-20200514113438-38f4b401e2be h1:9AeTilPcZAjCFIImctFaOjnTIavg87rW78vTPkQqLI8=
@@ -363,6 +367,8 @@ github.com/sfomuseum/go-database v0.0.18 h1:C4JyfixyWUC1pPJdJp1yzMRr58LgrGYClQJw
 github.com/sfomuseum/go-database v0.0.18/go.mod h1:+5BwntUQTv7J5ugQrtS5/lEezZM01pzzok+OSCHrMQU=
 github.com/sfomuseum/go-edtf v1.3.0 h1:07oBf8NcWmpwIzUz/WMgTz1huQNVdiJ/IjFzkIRGj2Q=
 github.com/sfomuseum/go-edtf v1.3.0/go.mod h1:4RLvbBp7XhqRuDVhJjYUKY5napMKQvcZxQnIb/i1tyo=
+github.com/sfomuseum/go-edtf-http v0.0.5 h1:faEBF+cHzuHR2T9CsWmDlgbrGNCUdGE82iMOH1b4a3g=
+github.com/sfomuseum/go-edtf-http v0.0.5/go.mod h1:MIGqTWwxd1McgZqq+BfGujmDTNLBXFiYSYWopzfBZIY=
 github.com/sfomuseum/go-flags v0.8.3/go.mod h1:VXOnnX1/yxQpX2yiwHaBV6aCmhtszQOL5bL1/nNo3co=
 github.com/sfomuseum/go-flags v0.12.1 h1:xvg3iEz510JPr9ItPxOOF2C12JnlplodT1V/1Ty7Pg8=
 github.com/sfomuseum/go-flags v0.12.1/go.mod h1:cUTByyudaM9d+iHwxsEpyYHemWVOGL/bqTRPIvydiC8=

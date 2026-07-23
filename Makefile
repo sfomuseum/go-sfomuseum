@@ -20,6 +20,12 @@ compile:
 	@make compile-opensearch
 	@make compile-twitter
 	@make compile-instagram
+	@make compile-edtf
+
+compile-edtf:
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-dt-to-edtf cmd/sfom-dt-to-edtf/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-dt-edtf-string cmd/sfom-dt-edtf-string/main.go
+	go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -o bin/sfom-dt-edtf-server cmd/sfom-dt-edtf-server/main.go
 
 compile-instagram:
 	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-instagram-emit cmd/sfom-instagram-emit/main.go
@@ -126,6 +132,17 @@ compile-collection-data:
 
 lambda:
 	@make lambda-wof
+	@make lambda-edtf
+
+lambda-edtf:
+	@make lambda-edtf-server
+
+lambda-edtf-server:
+	if test -f bootstrap; then rm -f bootstrap; fi
+	if test -f sfom-dt-edtf-server.zip; then rm -f sfom-dt-edtf-server.zip; fi
+	GOARCH=arm64 GOOS=linux go build -mod $(GOMOD) -ldflags="$(LDFLAGS)" -tags lambda.norpc -o bootstrap cmd/sfom-dt-edtf-server/main.go
+	zip sfom-dt-edtf-server.zip bootstrap
+	rm -f bootstrap
 
 lambda-wof:
 	@make lambda-wof-import

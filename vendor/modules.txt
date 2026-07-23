@@ -151,6 +151,10 @@ github.com/aaronland/go-aws/v3/lambda
 # github.com/aaronland/go-brooklynintegers-api v1.2.10
 ## explicit; go 1.22
 github.com/aaronland/go-brooklynintegers-api
+# github.com/aaronland/go-http/v4 v4.0.4
+## explicit; go 1.25.0
+github.com/aaronland/go-http/v4/sanitize
+github.com/aaronland/go-http/v4/server
 # github.com/aaronland/go-json-query v0.1.6
 ## explicit; go 1.22
 github.com/aaronland/go-json-query
@@ -188,8 +192,12 @@ github.com/aaronland/gocloud/blob/bucket
 github.com/aaronland/gocloud/blob/s3
 github.com/aaronland/gocloud/docstore
 github.com/aaronland/gocloud/runtimevar
+# github.com/akrylysov/algnhsa v1.1.0
+## explicit; go 1.18
+github.com/akrylysov/algnhsa
 # github.com/aws/aws-lambda-go v1.54.0
 ## explicit; go 1.18
+github.com/aws/aws-lambda-go/events
 github.com/aws/aws-lambda-go/lambda
 github.com/aws/aws-lambda-go/lambda/handlertrace
 github.com/aws/aws-lambda-go/lambda/messages
@@ -803,6 +811,9 @@ github.com/sfomuseum/go-edtf/parser
 github.com/sfomuseum/go-edtf/re
 github.com/sfomuseum/go-edtf/tests
 github.com/sfomuseum/go-edtf/unix
+# github.com/sfomuseum/go-edtf-http v0.0.5
+## explicit; go 1.26
+github.com/sfomuseum/go-edtf-http/api
 # github.com/sfomuseum/go-flags v0.12.1
 ## explicit; go 1.22
 github.com/sfomuseum/go-flags/flagset
