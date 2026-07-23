@@ -4,26 +4,33 @@ go 1.26.5
 
 require (
 	github.com/aaronland/go-aws/v3 v3.5.3
+	github.com/aaronland/go-json-query v0.1.6
 	github.com/aaronland/go-roster v1.0.0
 	github.com/aws/aws-lambda-go v1.54.0
+	github.com/corona10/goimagehash v1.1.0
 	github.com/jtacoma/uritemplates v1.0.0
 	github.com/mattn/go-sqlite3 v1.14.48
 	github.com/mitchellh/go-wordwrap v1.0.1
+	github.com/neurosnap/sentences v1.1.2
 	github.com/paulmach/orb v0.13.0
 	github.com/sfomuseum/go-database v0.0.18
 	github.com/sfomuseum/go-edtf v1.3.0
 	github.com/sfomuseum/go-flags v0.12.1
 	github.com/sfomuseum/go-geojson-geotag/v2 v2.0.0
+	github.com/sfomuseum/go-url-unshortener v0.1.0
 	github.com/tidwall/gjson v1.19.0
 	github.com/tidwall/pretty v1.2.1
 	github.com/tidwall/sjson v1.2.5
 	github.com/whosonfirst/go-ioutil v1.0.2
+	github.com/whosonfirst/go-reader v1.1.0
 	github.com/whosonfirst/go-reader-github/v2 v2.0.4
 	github.com/whosonfirst/go-reader/v2 v2.1.0
+	github.com/whosonfirst/go-whosonfirst-elasticsearch v0.11.0
 	github.com/whosonfirst/go-whosonfirst/v4 v4.3.2
 	github.com/whosonfirst/go-writer-github/v3 v3.1.2
 	github.com/whosonfirst/go-writer/v3 v3.1.1
 	gocloud.dev v0.46.0
+	golang.org/x/net v0.56.0
 )
 
 require (
@@ -47,7 +54,6 @@ require (
 	github.com/RoaringBitmap/roaring v1.5.0 // indirect
 	github.com/aaronland/go-artisanal-integers v0.9.1 // indirect
 	github.com/aaronland/go-brooklynintegers-api v1.2.10 // indirect
-	github.com/aaronland/go-json-query v0.1.6 // indirect
 	github.com/aaronland/go-pagination v0.3.0 // indirect
 	github.com/aaronland/go-pagination-sql v0.2.0 // indirect
 	github.com/aaronland/go-pool/v2 v2.0.0 // indirect
@@ -137,6 +143,8 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/natefinch/atomic v1.0.1 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
+	github.com/opensearch-project/opensearch-go/v4 v4.6.0 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/peterstace/simplefeatures v0.59.0 // indirect
@@ -163,7 +171,9 @@ require (
 	github.com/tidwall/rtree v1.3.1 // indirect
 	github.com/whosonfirst/go-rfc-5646 v0.1.0 // indirect
 	github.com/whosonfirst/go-sanitize v0.1.0 // indirect
+	github.com/whosonfirst/go-whosonfirst-placetypes v0.7.1 // indirect
 	github.com/whosonfirst/go-whosonfirst-sources v0.1.0 // indirect
+	github.com/whosonfirst/go-whosonfirst-spelunker v0.0.0-20240320192355-9b5a32a26365 // indirect
 	github.com/whosonfirst/go-whosonfirst-uri v1.3.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	go.mongodb.org/mongo-driver/v2 v2.5.0 // indirect
@@ -180,7 +190,6 @@ require (
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
 	golang.org/x/crypto v0.53.0 // indirect
 	golang.org/x/image v0.43.0 // indirect
-	golang.org/x/net v0.56.0 // indirect
 	golang.org/x/oauth2 v0.36.0 // indirect
 	golang.org/x/sync v0.21.0 // indirect
 	golang.org/x/sys v0.46.0 // indirect
