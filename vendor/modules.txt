@@ -365,6 +365,9 @@ github.com/hashicorp/go-multierror
 # github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99
 ## explicit
 github.com/jbenet/go-context/io
+# github.com/jtacoma/uritemplates v1.0.0
+## explicit
+github.com/jtacoma/uritemplates
 # github.com/kevinburke/ssh_config v1.2.0
 ## explicit
 github.com/kevinburke/ssh_config
@@ -411,6 +414,7 @@ github.com/sfomuseum/go-edtf/unix
 # github.com/sfomuseum/go-flags v0.12.1
 ## explicit; go 1.22
 github.com/sfomuseum/go-flags/flagset
+github.com/sfomuseum/go-flags/multi
 # github.com/skeema/knownhosts v1.3.1
 ## explicit; go 1.22
 github.com/skeema/knownhosts

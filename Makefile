@@ -4,10 +4,37 @@ LDFLAGS=-s -w
 vuln:
 	govulncheck -show verbose ./...
 
+
+ITERATOR_URI=git:///tmp?exclude=properties.edtf:deprecated=.*
+ITERATOR_SOURCE=https://github.com/sfomuseum-data/sfomuseum-data-maps.git
+
+maps-refresh:
+	@make compile-maps
+	@make maps_catalog
+	@make maps_tile_connections
+
+maps-refresh-local:
+	@make compile-maps
+	@make maps-catalog ITERATOR_URI=repo://?exclude=properties.edtf:deprecated=.* ITERATOR_SOURCE=/usr/local/data/sfomuseum-data-maps
+	@make maps-tile-connections  ITERATOR_URI=repo://?exclude=properties.edtf:deprecated=.* ITERATOR_SOURCE=/usr/local/data/sfomuseum-data-maps
+
+maps-catalog:	
+	./bin/sfom-maps-catalog-js -iterator-uri $(ITERATOR_URI) -iterator-source $(ITERATOR_SOURCE) > dist/sfomuseum.maps.catalog.js
+
+maps-tile-connections:
+	./bin/qgis-tile-connections -iterator-uri $(ITERATOR_URI) -iterator-source $(ITERATOR_SOURCE) > dist/sfomuseum.maps.tileconnections.xml
+
+
 compile:
 	@make compile-airfield
 	@make compile-architecture
 	@make compile-curatorial
+	@make compile-maps
+
+compile-maps:
+	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-maps-catalog-js cmd/sfom-maps-catalog-js/main.go
+	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-maps-qgis-tile-connections cmd/sfom-maps-qgis-tile-connections/main.go
+	go build -mod $(GOMOD) -ldflags="-s -w" -o bin/sfom-maps-new cmd/sfom-maps-new/main.go
 
 compile-airfield:
 	@make compile-airlines

@@ -4,6 +4,7 @@ go 1.26.5
 
 require (
 	github.com/aaronland/go-roster v1.0.0
+	github.com/jtacoma/uritemplates v1.0.0
 	github.com/mattn/go-sqlite3 v1.14.48
 	github.com/paulmach/orb v0.13.0
 	github.com/sfomuseum/go-database v0.0.18
