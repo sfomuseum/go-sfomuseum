@@ -13,8 +13,8 @@ import (
 
 	"github.com/sfomuseum/go-sfomuseum/airfield/flights"
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v3"
-	"github.com/whosonfirst/go-whosonfirst-uri"
+	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
+	"github.com/whosonfirst/go-whosonfirst/v4/uri"
 )
 
 var lookup_table *sync.Map

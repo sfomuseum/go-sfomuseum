@@ -1,6 +1,9 @@
 GOMOD=$(shell test -f "go.work" && echo "readonly" || echo "vendor")
 LDFLAGS=-s -w
 
+vuln:
+	govulncheck -show verbose ./...
+
 compile:
 	@make compile-airfield
 	@make compile-architecture

@@ -8,7 +8,7 @@ import (
 	"github.com/paulmach/orb/geojson"
 	"github.com/paulmach/orb/planar"
 	"github.com/whosonfirst/go-reader/v2"
-	wof_reader "github.com/whosonfirst/go-whosonfirst-reader/v2"
+	wof_reader "github.com/whosonfirst/go-whosonfirst/v4/reader"
 )
 
 // Derive a MultiPoint geoemtry for one or more gallery IDs.

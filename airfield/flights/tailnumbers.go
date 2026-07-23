@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/tidwall/gjson"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v3"
+	"github.com/whosonfirst/go-whosonfirst/v4/iterate"
 )
 
 // TailNumbersFromIterator will return the unique set of `swim:tail_number` values from one or more whosonfirst/go-whosonfirst-iterate sources for SFO Museum flight data.
