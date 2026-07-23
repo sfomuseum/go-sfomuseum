@@ -35,7 +35,7 @@ func Id2RelPath(id int64) (string, error) {
 }
 
 // ReadCustomProperties will return a properties map for id, reading the raw data from r.
-func ReadCustomProperties(ctx context.Context, r reader.Reader, id int64) (map[string]interface{}, error) {
+func ReadCustomProperties(ctx context.Context, r reader.Reader, id int64) (map[string]any, error) {
 
 	props_path, err := Id2RelPath(id)
 
@@ -49,7 +49,7 @@ func ReadCustomProperties(ctx context.Context, r reader.Reader, id int64) (map[s
 		return nil, fmt.Errorf("Failed to read custom properties for %s, %w", props_path, err)
 	}
 
-	var props_map map[string]interface{}
+	var props_map map[string]any
 
 	dec := json.NewDecoder(props_fh)
 	err = dec.Decode(&props_map)
@@ -62,7 +62,7 @@ func ReadCustomProperties(ctx context.Context, r reader.Reader, id int64) (map[s
 }
 
 // WriteCustomProperties writes props_map to a relative path derived from id, using wr.
-func WriteCustomProperties(ctx context.Context, wr writer.Writer, id int64, props_map map[string]interface{}) error {
+func WriteCustomProperties(ctx context.Context, wr writer.Writer, id int64, props_map map[string]any) error {
 
 	props_path, err := Id2RelPath(id)
 
@@ -105,7 +105,7 @@ func WriteCustomProperties(ctx context.Context, wr writer.Writer, id int64, prop
 }
 
 // EnsureCustomProperties will ensure that a valid properties map exists for id in r. If it does not an empty properties map file will be written to wr.
-func EnsureCustomProperties(ctx context.Context, r reader.Reader, wr writer.Writer, id int64) (map[string]interface{}, error) {
+func EnsureCustomProperties(ctx context.Context, r reader.Reader, wr writer.Writer, id int64) (map[string]any, error) {
 
 	props_map, err := ReadCustomProperties(ctx, r, id)
 
@@ -117,9 +117,9 @@ func EnsureCustomProperties(ctx context.Context, r reader.Reader, wr writer.Writ
 }
 
 // CreateCustomProperties will create a new (empty) properties map for id, using wr.
-func CreateCustomProperties(ctx context.Context, wr writer.Writer, id int64) (map[string]interface{}, error) {
+func CreateCustomProperties(ctx context.Context, wr writer.Writer, id int64) (map[string]any, error) {
 
-	props_map := make(map[string]interface{})
+	props_map := make(map[string]any)
 
 	err := WriteCustomProperties(ctx, wr, id, props_map)
 
@@ -160,7 +160,7 @@ func MergeCustomProperties(ctx context.Context, props_r reader.Reader, data_r re
 
 	props_map = ApplyEDTFFixes(ctx, body, props_map)
 
-	fq_props := make(map[string]interface{})
+	fq_props := make(map[string]any)
 
 	for k, v := range props_map {
 		fq_k := fmt.Sprintf("properties.%s", k)

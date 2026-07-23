@@ -3,6 +3,7 @@ package update
 import (
 	"context"
 	"fmt"
+	"maps"
 	"strings"
 
 	"github.com/paulmach/orb/geojson"
@@ -20,7 +21,7 @@ import (
 // of ESRI-specific properties we don't want to export. 'parent_id' is passed in explicitly in order to append its hierarchy
 // using 'r' to load the parent feature. 'extra_props' are things that used to set explicitly or passed in as atomic values
 // namely wof:repo and edtf:inception.
-func CreateWithFeature(ctx context.Context, r reader.Reader, wr writer.Writer, tmp_f *geojson.Feature, parent_id int64, extra_props map[string]interface{}) (int64, error) {
+func CreateWithFeature(ctx context.Context, r reader.Reader, wr writer.Writer, tmp_f *geojson.Feature, parent_id int64, extra_props map[string]any) (int64, error) {
 
 	new_f := geojson.NewFeature(tmp_f.Geometry)
 	new_props := new_f.Properties
@@ -48,11 +49,9 @@ func CreateWithFeature(ctx context.Context, r reader.Reader, wr writer.Writer, t
 	}
 
 	// really?
-	for k, v := range extra_props {
-		new_props[k] = v
-	}
+	maps.Copy(new_props, extra_props)
 
-	ensure := map[string]interface{}{
+	ensure := map[string]any{
 		"edtf:inception": edtf.UNKNOWN,
 		"edtf:cessation": edtf.OPEN,
 	}

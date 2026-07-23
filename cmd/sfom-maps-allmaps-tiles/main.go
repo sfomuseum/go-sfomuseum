@@ -130,7 +130,7 @@ func main() {
 		log.Fatalf("Failed to parse URI template, %v", err)
 	}
 
-	vars := map[string]interface{}{
+	vars := map[string]any{
 		"label":     sz_label,
 		"secret":    secret_rsp.String(),
 		"extension": ext_rsp.String(),

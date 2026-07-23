@@ -194,7 +194,7 @@ func main() {
 
 	feature_ids := make([]int64, 0)
 
-	features_map.Range(func(k interface{}, v interface{}) bool {
+	features_map.Range(func(k any, v any) bool {
 
 		id := k.(int64)
 

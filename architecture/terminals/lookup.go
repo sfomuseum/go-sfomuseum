@@ -8,6 +8,7 @@ import (
 	_ "log"
 	"net/http"
 	"net/url"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -173,7 +174,7 @@ func NewLookupFromIterator(ctx context.Context, iterator_uri string, iterator_so
 	return NewLookupWithLookupFunc(ctx, lookup_func)
 }
 
-func (l *TerminalsLookup) Find(ctx context.Context, code string) ([]interface{}, error) {
+func (l *TerminalsLookup) Find(ctx context.Context, code string) ([]any, error) {
 
 	pointers, ok := lookup_table.Load(code)
 
@@ -212,7 +213,7 @@ func (l *TerminalsLookup) Find(ctx context.Context, code string) ([]interface{},
 		return date_i < date_j
 	})
 
-	terminals_list := make([]interface{}, len(terminals))
+	terminals_list := make([]any, len(terminals))
 
 	for idx, t := range terminals {
 		terminals_list[idx] = t
@@ -221,7 +222,7 @@ func (l *TerminalsLookup) Find(ctx context.Context, code string) ([]interface{},
 	return terminals_list, nil
 }
 
-func (l *TerminalsLookup) Append(ctx context.Context, data interface{}) error {
+func (l *TerminalsLookup) Append(ctx context.Context, data any) error {
 	return appendData(ctx, lookup_table, data.(*Terminal))
 }
 
@@ -267,12 +268,8 @@ func appendData(ctx context.Context, table *sync.Map, data *Terminal) error {
 			pointers = others.([]string)
 		}
 
-		for _, dupe := range pointers {
-
-			if dupe == pointer {
-				has_pointer = true
-				break
-			}
+		if slices.Contains(pointers, pointer) {
+			has_pointer = true
 		}
 
 		if has_pointer {

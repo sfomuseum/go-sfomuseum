@@ -8,8 +8,8 @@ import (
 )
 
 type Lookup interface {
-	Find(context.Context, string) ([]interface{}, error)
-	Append(context.Context, interface{}) error
+	Find(context.Context, string) ([]any, error)
+	Append(context.Context, any) error
 }
 
 var lookup_roster roster.Roster

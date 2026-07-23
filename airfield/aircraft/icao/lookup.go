@@ -9,6 +9,7 @@ import (
 	_ "log"
 	"net/http"
 	"net/url"
+	"slices"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -141,7 +142,7 @@ func NewICAOLookupWithLookupFunc(ctx context.Context, lookup_func ICAOLookupFunc
 	return &l, nil
 }
 
-func (l *ICAOLookup) Find(ctx context.Context, code string) ([]interface{}, error) {
+func (l *ICAOLookup) Find(ctx context.Context, code string) ([]any, error) {
 
 	pointers, ok := lookup_table.Load(code)
 
@@ -149,7 +150,7 @@ func (l *ICAOLookup) Find(ctx context.Context, code string) ([]interface{}, erro
 		return nil, aircraft.NotFound{code}
 	}
 
-	aircraft := make([]interface{}, 0)
+	aircraft := make([]any, 0)
 
 	for _, p := range pointers.([]string) {
 
@@ -169,7 +170,7 @@ func (l *ICAOLookup) Find(ctx context.Context, code string) ([]interface{}, erro
 	return aircraft, nil
 }
 
-func (l *ICAOLookup) Append(ctx context.Context, data interface{}) error {
+func (l *ICAOLookup) Append(ctx context.Context, data any) error {
 	return appendData(ctx, lookup_table, data.(*Aircraft))
 }
 
@@ -201,12 +202,8 @@ func appendData(ctx context.Context, table *sync.Map, data *Aircraft) error {
 			pointers = others.([]string)
 		}
 
-		for _, dupe := range pointers {
-
-			if dupe == pointer {
-				has_pointer = true
-				break
-			}
+		if slices.Contains(pointers, pointer) {
+			has_pointer = true
 		}
 
 		if has_pointer {

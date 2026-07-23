@@ -9,7 +9,7 @@ import (
 )
 
 // ApplyEDTFFixes applies EDTF 2019 updates to 'props_maps' (derived from 'body') if necessary.
-func ApplyEDTFFixes(ctx context.Context, body []byte, props_map map[string]interface{}) map[string]interface{} {
+func ApplyEDTFFixes(ctx context.Context, body []byte, props_map map[string]any) map[string]any {
 
 	data_props := gjson.GetBytes(body, "properties")
 

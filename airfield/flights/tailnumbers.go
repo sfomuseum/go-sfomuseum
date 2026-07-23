@@ -57,7 +57,7 @@ func TailNumbersFromIterator(ctx context.Context, iterator_uri string, iterator_
 
 	values := make([]string, 0)
 
-	catalog.Range(func(v interface{}, ignore interface{}) bool {
+	catalog.Range(func(v any, ignore any) bool {
 		values = append(values, v.(string))
 		return true
 	})

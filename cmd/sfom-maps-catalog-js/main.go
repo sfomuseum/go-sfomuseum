@@ -58,7 +58,7 @@ func main() {
 	flag.Parse()
 
 	t := template.New("sfomuseum_maps").Funcs(template.FuncMap{
-		"ToJSON": func(raw interface{}) string {
+		"ToJSON": func(raw any) string {
 
 			enc, err := json.Marshal(raw)
 

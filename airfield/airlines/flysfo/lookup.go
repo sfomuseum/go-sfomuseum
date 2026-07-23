@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -150,7 +151,7 @@ func NewFlySFOLookupWithLookupFunc(ctx context.Context, lookup_func FlySFOLookup
 	return &l, nil
 }
 
-func (l *FlySFOLookup) Find(ctx context.Context, code string) ([]interface{}, error) {
+func (l *FlySFOLookup) Find(ctx context.Context, code string) ([]any, error) {
 
 	pointers, ok := lookup_table.Load(code)
 
@@ -158,7 +159,7 @@ func (l *FlySFOLookup) Find(ctx context.Context, code string) ([]interface{}, er
 		return nil, airlines.NotFound{code}
 	}
 
-	airline := make([]interface{}, 0)
+	airline := make([]any, 0)
 
 	for _, p := range pointers.([]string) {
 
@@ -178,7 +179,7 @@ func (l *FlySFOLookup) Find(ctx context.Context, code string) ([]interface{}, er
 	return airline, nil
 }
 
-func (l *FlySFOLookup) Append(ctx context.Context, data interface{}) error {
+func (l *FlySFOLookup) Append(ctx context.Context, data any) error {
 	return appendData(ctx, lookup_table, data.(*Airline))
 }
 
@@ -213,12 +214,8 @@ func appendData(ctx context.Context, table *sync.Map, data *Airline) error {
 			pointers = others.([]string)
 		}
 
-		for _, dupe := range pointers {
-
-			if dupe == pointer {
-				has_pointer = true
-				break
-			}
+		if slices.Contains(pointers, pointer) {
+			has_pointer = true
 		}
 
 		if has_pointer {

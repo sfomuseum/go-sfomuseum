@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -179,7 +180,7 @@ func NewSFOMuseumLookupFromIterator(ctx context.Context, iterator_uri string, it
 	return NewSFOMuseumLookupWithLookupFunc(ctx, lookup_func)
 }
 
-func (l *SFOMuseumLookup) Find(ctx context.Context, code string) ([]interface{}, error) {
+func (l *SFOMuseumLookup) Find(ctx context.Context, code string) ([]any, error) {
 
 	pointers, ok := lookup_table.Load(code)
 
@@ -187,7 +188,7 @@ func (l *SFOMuseumLookup) Find(ctx context.Context, code string) ([]interface{},
 		return nil, airlines.NotFound{code}
 	}
 
-	airline := make([]interface{}, 0)
+	airline := make([]any, 0)
 
 	for _, p := range pointers.([]string) {
 
@@ -207,7 +208,7 @@ func (l *SFOMuseumLookup) Find(ctx context.Context, code string) ([]interface{},
 	return airline, nil
 }
 
-func (l *SFOMuseumLookup) Append(ctx context.Context, data interface{}) error {
+func (l *SFOMuseumLookup) Append(ctx context.Context, data any) error {
 	return appendData(ctx, lookup_table, data.(*Airline))
 }
 
@@ -264,12 +265,8 @@ func appendData(ctx context.Context, table *sync.Map, data *Airline) error {
 			pointers = others.([]string)
 		}
 
-		for _, dupe := range pointers {
-
-			if dupe == pointer {
-				has_pointer = true
-				break
-			}
+		if slices.Contains(pointers, pointer) {
+			has_pointer = true
 		}
 
 		if has_pointer {

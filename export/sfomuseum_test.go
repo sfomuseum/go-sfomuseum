@@ -3,7 +3,8 @@ package export
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
+	"io"
+
 	"os"
 	"path/filepath"
 	"testing"
@@ -33,7 +34,7 @@ func TestSFOMuseumExport(t *testing.T) {
 
 	defer feature_fh.Close()
 
-	body, err := ioutil.ReadAll(feature_fh)
+	body, err := io.ReadAll(feature_fh)
 
 	if err != nil {
 		t.Fatal(err)

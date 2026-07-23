@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -172,7 +173,7 @@ func NewLookupFromIterator(ctx context.Context, iterator_uri string, iterator_so
 	return NewLookupWithLookupFunc(ctx, lookup_func)
 }
 
-func (l *GalleriesLookup) Find(ctx context.Context, code string) ([]interface{}, error) {
+func (l *GalleriesLookup) Find(ctx context.Context, code string) ([]any, error) {
 
 	pointers, ok := lookup_table.Load(code)
 
@@ -211,7 +212,7 @@ func (l *GalleriesLookup) Find(ctx context.Context, code string) ([]interface{},
 		return date_i < date_j
 	})
 
-	galleries_list := make([]interface{}, len(galleries))
+	galleries_list := make([]any, len(galleries))
 
 	for idx, g := range galleries {
 		galleries_list[idx] = g
@@ -220,7 +221,7 @@ func (l *GalleriesLookup) Find(ctx context.Context, code string) ([]interface{},
 	return galleries_list, nil
 }
 
-func (l *GalleriesLookup) Append(ctx context.Context, data interface{}) error {
+func (l *GalleriesLookup) Append(ctx context.Context, data any) error {
 	return appendData(ctx, lookup_table, data.(*Gallery))
 }
 
@@ -259,12 +260,8 @@ func appendData(ctx context.Context, table *sync.Map, data *Gallery) error {
 			pointers = others.([]string)
 		}
 
-		for _, dupe := range pointers {
-
-			if dupe == pointer {
-				has_pointer = true
-				break
-			}
+		if slices.Contains(pointers, pointer) {
+			has_pointer = true
 		}
 
 		if has_pointer {

@@ -227,7 +227,7 @@ func main() {
 		PropertiesWriter: props_wr,
 	}
 
-	custom_props := make(map[string]interface{})
+	custom_props := make(map[string]any)
 
 	for _, p := range str_properties {
 		path := p.Key()

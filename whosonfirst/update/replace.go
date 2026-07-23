@@ -125,7 +125,7 @@ func ReplaceWithFeature(ctx context.Context, r reader.Reader, wr writer.Writer, 
 
 	if ok {
 
-		for _, i := range old_superseded_by.([]interface{}) {
+		for _, i := range old_superseded_by.([]any) {
 			superseded_by = append(superseded_by, int64(i.(float64)))
 		}
 

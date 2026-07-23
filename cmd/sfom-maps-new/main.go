@@ -83,7 +83,7 @@ func main() {
 
 	geom := geojson.NewGeometry(poly)
 
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"properties.sfomuseum:uri": *year,
 		"properties.wof:name":      *name,
 		"properties.wof:hierarchy": p_hier,

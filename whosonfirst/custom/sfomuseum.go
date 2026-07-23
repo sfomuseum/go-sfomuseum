@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"maps"
 
 	"github.com/whosonfirst/go-reader/v2"
 	"github.com/whosonfirst/go-whosonfirst/v4/feature/properties"
@@ -22,7 +23,7 @@ type SFOMuseumPropertiesOptions struct {
 	// PropertiesWriter is a a `whosonfirst/go-writer.ReaderWriter` instance used to writer SFO Museum properties.
 	PropertiesWriter writer.Writer
 	// CustomProperties is a dictionary containing SFO Museum properties to append to a Who's On First record.
-	CustomProperties map[string]interface{}
+	CustomProperties map[string]any
 }
 
 // ApplySFOMuseumProperties updates one or more Who's On First records identified by 'ids' with SFO Museum specific properties.
@@ -87,9 +88,7 @@ func applySFOMuseumProperties(ctx context.Context, opts *SFOMuseumPropertiesOpti
 
 	if opts.CustomProperties != nil {
 
-		for k, v := range opts.CustomProperties {
-			props[k] = v
-		}
+		maps.Copy(props, opts.CustomProperties)
 
 	}
 

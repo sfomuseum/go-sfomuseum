@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -168,7 +169,7 @@ func NewLookupFromIterator(ctx context.Context, iterator_uri string, iterator_so
 	return NewLookupWithLookupFunc(ctx, lookup_func)
 }
 
-func (l *CollectionLookup) Find(ctx context.Context, code string) ([]interface{}, error) {
+func (l *CollectionLookup) Find(ctx context.Context, code string) ([]any, error) {
 
 	pointers, ok := lookup_table.Load(code)
 
@@ -176,7 +177,7 @@ func (l *CollectionLookup) Find(ctx context.Context, code string) ([]interface{}
 		return nil, NotFound{code}
 	}
 
-	candidates := make([]interface{}, 0)
+	candidates := make([]any, 0)
 
 	for _, p := range pointers.([]string) {
 
@@ -196,7 +197,7 @@ func (l *CollectionLookup) Find(ctx context.Context, code string) ([]interface{}
 	return candidates, nil
 }
 
-func (l *CollectionLookup) Append(ctx context.Context, data interface{}) error {
+func (l *CollectionLookup) Append(ctx context.Context, data any) error {
 	return appendData(ctx, lookup_table, data.(*Object))
 }
 
@@ -241,12 +242,8 @@ func appendData(ctx context.Context, table *sync.Map, data *Object) error {
 			pointers = others.([]string)
 		}
 
-		for _, dupe := range pointers {
-
-			if dupe == pointer {
-				has_pointer = true
-				break
-			}
+		if slices.Contains(pointers, pointer) {
+			has_pointer = true
 		}
 
 		if has_pointer {

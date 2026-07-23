@@ -55,7 +55,7 @@ func main() {
 
 	body := stub
 
-	updates := map[string]interface{}{
+	updates := map[string]any{
 		"properties.wof:name":             *name,
 		"properties.wof:parent_id":        *parent_id,
 		"properties.sfomuseum:airline_id": *sfom_id,
@@ -75,7 +75,7 @@ func main() {
 		}
 	}
 
-	concordances := make(map[string]interface{})
+	concordances := make(map[string]any)
 
 	if *iata_code != "" || *icao_code != "" || *icao_callsign != "" || *wikidata_id != "" {
 

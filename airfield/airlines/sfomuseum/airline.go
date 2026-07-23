@@ -3,6 +3,7 @@ package sfomuseum
 import (
 	"context"
 	"fmt"
+	"slices"
 
 	"github.com/sfomuseum/go-sfomuseum/airfield"
 	"github.com/sfomuseum/go-sfomuseum/airfield/airlines"
@@ -51,15 +52,7 @@ func FindCurrentAirlineWithLookup(ctx context.Context, lookup airfield.Lookup, c
 
 		for _, a := range current {
 
-			ok := false
-
-			for _, r := range roles {
-
-				if a.Role == r {
-					ok = true
-					break
-				}
-			}
+			ok := slices.Contains(roles, a.Role)
 
 			if ok {
 				candidates = append(candidates, a)
