@@ -16,6 +16,7 @@ This pacakage bundles and supersedes the following packages:
 * `sfomuseum/go-sfomuseum-instagram`
 * `sfomuseum/go-sfomuseum-instagram-publish`
 * `sfomuseum/go-sfomuseum-maps`
+* `sfomuseum/go-sfomuseum-mapshaper`
 * `sfomuseum/go-sfomuseum-placetypes`
 * `sfomuseum/go-sfomuseum-spatial`
 * `sfomuseum/go-sfomuseum-twitter`
