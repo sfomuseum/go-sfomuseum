@@ -44,7 +44,7 @@ func DefaultFlagSet(ctx context.Context) (*flag.FlagSet, error) {
 
 	fs.StringVar(&spatial_database_uri, "spatial-database-uri", "rtree://", "A valid whosonfirst/go-whosonfirst-spatial URI. This is the database of spatial records that will for PIP-ing.")
 
-	// As in github:sfomuseum/go-sfomuseum-mapshaper and github:sfomuseum/docker-sfomuseum-mapshaper
+	// As in github:sfomuseum/go-sfomuseummapshaper and github:sfomuseum/docker-sfomuseum-mapshaper
 	// One day the functionality exposed here will be ported to Go and this won't be necessary
 
 	fs.StringVar(&mapshaper_server, "mapshaper-server", "", "A valid HTTP URI pointing to a sfomuseum/go-sfomuseum-mapshaper server endpoint.")

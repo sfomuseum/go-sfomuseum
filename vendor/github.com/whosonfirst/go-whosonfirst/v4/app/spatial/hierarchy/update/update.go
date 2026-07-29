@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/sfomuseum/go-sfomuseum-mapshaper"
 	"github.com/whosonfirst/go-whosonfirst/v4/export"
 	"github.com/whosonfirst/go-whosonfirst/v4/spatial/database"
 	"github.com/whosonfirst/go-whosonfirst/v4/spatial/hierarchy"
@@ -88,35 +87,6 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 		spatial_db = _db
 	}
 
-	// All of this mapshaper stuff can't be retired/replaced fast enough...
-	// (20210222/thisisaaronland)
-
-	var ms_client *mapshaper.Client
-
-	if opts.MapshaperServerURI != "" {
-
-		// Set up mapshaper endpoint (for deriving centroids during PIP operations)
-		// Make sure it's working
-
-		client, err := mapshaper.NewClient(ctx, opts.MapshaperServerURI)
-
-		if err != nil {
-			return fmt.Errorf("Failed to create mapshaper client for '%s', %v", opts.MapshaperServerURI, err)
-		}
-
-		ok, err := client.Ping()
-
-		if err != nil {
-			return fmt.Errorf("Failed to ping '%s', %v", opts.MapshaperServerURI, err)
-		}
-
-		if !ok {
-			return fmt.Errorf("'%s' returned false", opts.MapshaperServerURI)
-		}
-
-		ms_client = client
-	}
-
 	update_cb := opts.PIPUpdateFunc
 
 	if update_cb == nil {
@@ -124,8 +94,7 @@ func RunWithOptions(ctx context.Context, opts *RunOptions) error {
 	}
 
 	resolver_opts := &hierarchy.PointInPolygonHierarchyResolverOptions{
-		Database:  spatial_db,
-		Mapshaper: ms_client,
+		Database: spatial_db,
 	}
 
 	resolver, err := hierarchy.NewPointInPolygonHierarchyResolver(ctx, resolver_opts)

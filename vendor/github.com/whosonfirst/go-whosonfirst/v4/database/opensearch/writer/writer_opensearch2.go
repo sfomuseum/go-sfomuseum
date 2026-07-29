@@ -361,7 +361,7 @@ func (wr *OpensearchV2Writer) Close(ctx context.Context) error {
 		return fmt.Errorf("Indexed (%d) documents with (%d) errors", stats.NumFlushed, stats.NumFailed)
 	}
 
-	slog.Info("Index complete", "indexed", stats.NumFlushed)
+	slog.Debug("Index complete", "indexed", stats.NumFlushed)
 	return nil
 }
 

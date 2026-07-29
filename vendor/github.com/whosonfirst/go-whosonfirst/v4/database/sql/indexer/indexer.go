@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"runtime"
 	"sync"
 	"time"
 
@@ -43,6 +44,11 @@ type IndexerOptions struct {
 
 // NewSQLiteInder returns a `Indexer` configured with 'opts'.
 func NewIndexer(opts *IndexerOptions) (*Indexer, error) {
+
+	if opts.Workers == 0 {
+		opts.Workers = runtime.NumCPU()
+		slog.Debug("No worker count set, assigning automatically", "workers", opts.Workers)
+	}
 
 	table_timings := make(map[string]time.Duration)
 	mu := new(sync.RWMutex)
@@ -85,6 +91,7 @@ func (idx *Indexer) IndexURIs(ctx context.Context, iterator_uri string, uris ...
 		for {
 			select {
 			case err := <-iter_err_ch:
+				slog.Error("Received iterator error", "error", err)
 				iter_err = err
 				iter_cancel()
 				return
@@ -116,6 +123,8 @@ func (idx *Indexer) IndexURIs(ctx context.Context, iterator_uri string, uris ...
 
 			logger := slog.Default()
 			logger = logger.With("path", rec.Path)
+
+			logger.Debug("Process record")
 
 			defer func() {
 				rec.Body.Close()

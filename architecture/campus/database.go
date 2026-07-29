@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"log/slog"
 	"net/url"
-
+	"runtime"
+	
 	_ "github.com/mattn/go-sqlite3"
 
 	sfom_sql "github.com/sfomuseum/go-database/sql"
@@ -52,7 +53,7 @@ func NewDatabaseWithIterator(ctx context.Context, dsn string, iterator_uri strin
 	supersedes_table, err := wof_tables.NewSupersedesTableWithDatabase(ctx, db)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create supersedes table, %w", err)
 	}
 
 	to_index = append(to_index, supersedes_table)
@@ -60,13 +61,13 @@ func NewDatabaseWithIterator(ctx context.Context, dsn string, iterator_uri strin
 	spr_opts, err := wof_tables.DefaultSPRTableOptions()
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create spr table options, %w", err)
 	}
 
 	spr_table, err := wof_tables.NewSPRTableWithDatabaseAndOptions(ctx, db, spr_opts)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create spr table, %w", err)
 	}
 
 	to_index = append(to_index, spr_table)
@@ -81,18 +82,19 @@ func NewDatabaseWithIterator(ctx context.Context, dsn string, iterator_uri strin
 		DB:             db,
 		Tables:         to_index,
 		LoadRecordFunc: record_func,
+		Workers: runtime.NumCPU(),
 	}
 
 	idx, err := wof_indexer.NewIndexer(idx_opts)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create database indexer, %w", err)
 	}
 
 	err = idx.IndexURIs(ctx, iterator_uri, paths...)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to index paths, %w", err)
 	}
 
 	return db, nil

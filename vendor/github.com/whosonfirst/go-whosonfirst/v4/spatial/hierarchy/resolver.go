@@ -8,7 +8,6 @@ import (
 
 	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/geojson"
-	"github.com/sfomuseum/go-sfomuseum-mapshaper"
 	"github.com/tidwall/gjson"
 	"github.com/whosonfirst/go-reader/v2"
 	"github.com/whosonfirst/go-whosonfirst/v4/export"
@@ -23,8 +22,6 @@ import (
 type PointInPolygonHierarchyResolverOptions struct {
 	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
 	Database database.SpatialDatabase
-	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
-	Mapshaper *mapshaper.Client
 	// PlacetypesDefinition is an optional `go-whosonfirst-placetypes.Definition` instance used to resolve custom or bespoke placetypes.
 	PlacetypesDefinition placetypes.Definition
 	// SkipPlacetypeFilter is an optional boolean flag to signal whether or not point-in-polygon operations should be performed using
@@ -45,8 +42,6 @@ type PointInPolygonHierarchyResolverOptions struct {
 type PointInPolygonHierarchyResolver struct {
 	// Database is the `database.SpatialDatabase` instance used to perform point-in-polygon requests.
 	Database database.SpatialDatabase
-	// Mapshaper is an optional `mapshaper.Client` instance used to derive centroids used in point-in-polygon requests.
-	Mapshaper *mapshaper.Client
 	// PlacetypesDefinition is an optional `go-whosonfirst-placetypes.Definition` instance used to resolve custom or bespoke placetypes.
 	PlacetypesDefinition placetypes.Definition
 	// reader is the `reader.Reader` instance used to retrieve ancestor records. By default it is the same as `Database` but can be assigned
@@ -90,7 +85,6 @@ func NewPointInPolygonHierarchyResolver(ctx context.Context, opts *PointInPolygo
 
 	t := &PointInPolygonHierarchyResolver{
 		Database:              opts.Database,
-		Mapshaper:             opts.Mapshaper,
 		PlacetypesDefinition:  pt_def,
 		reader:                opts.Database,
 		skip_placetype_filter: opts.SkipPlacetypeFilter,
@@ -349,45 +343,15 @@ func (t *PointInPolygonHierarchyResolver) PointInPolygonCentroid(ctx context.Con
 
 	case "Polygon", "MultiPolygon":
 
-		if t.Mapshaper == nil {
+		pt, ok := geo.FindInnerPoint(f.Geometry)
+
+		if !ok {
 
 			bound := f.Geometry.Bound()
-			pt := bound.Center()
-
-			candidate = geojson.NewFeature(pt)
-
-		} else {
-
-			// this is not great but it's also not hard and making
-			// the "perfect" mapshaper interface is yak-shaving right
-			// now (20210204/thisisaaronland)
-
-			fc := geojson.NewFeatureCollection()
-			fc.Append(f)
-
-			fc, err := t.Mapshaper.AppendCentroids(ctx, fc)
-
-			if err != nil {
-				return nil, fmt.Errorf("Failed to append centroids, %v", err)
-			}
-
-			f = fc.Features[0]
-
-			candidate = geojson.NewFeature(f.Geometry)
-
-			lat, lat_ok := f.Properties["mps:latitude"]
-			lon, lon_ok := f.Properties["mps:longitude"]
-
-			if lat_ok && lon_ok {
-
-				pt := orb.Point{
-					lat.(float64),
-					lon.(float64),
-				}
-
-				candidate = geojson.NewFeature(pt)
-			}
+			pt = bound.Center()
 		}
+
+		candidate = geojson.NewFeature(pt)
 
 	default:
 		return nil, fmt.Errorf("Unsupported type '%v'", t)
